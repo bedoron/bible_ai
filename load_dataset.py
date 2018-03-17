@@ -136,6 +136,8 @@ if __name__ == '__main__':
     print(len(bible_words.keys()))
     print('Maximal verse length: ', maximal_verse)
     print('Top 15:')
-    print(stats[-20:])
+
+    for stat in stats[-20:]:
+        print(stat)
 
     vectorized_verses, bible_words_to_index, index_to_bible_word = vectorize_bible_data(verses, maximal_verse, bible_words)
