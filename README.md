@@ -2,9 +2,12 @@
 Parses the bible into human friendly format.
 
 Distinct words (hopefully): 41045
+
+
 Maximal verse length:  44
 
 Top 15:
+```
 ('מלך', 1020)
 ('בית', 1027)
 ('המלך', 1048)
@@ -25,5 +28,5 @@ Top 15:
 ('אשר', 4836)
 ('יהוה', 6006)
 ('את', 7365)
-
+```
 
