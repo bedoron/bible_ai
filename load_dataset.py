@@ -58,7 +58,7 @@ def bible_files_iterator(extraction_dir):
 
 def bible_book_chapters_iterator(bible_book_soup):
     """
-    :ptype bible_book_soup: BeautifulSoup
+    :type bible_book_soup: BeautifulSoup
     :rtype str
     """
     # Find actual content area
@@ -77,6 +77,7 @@ def bible_book_chapters_iterator(bible_book_soup):
 
         segment_text = ILLEGAL_CHARS_REMOVER.sub(' ', book_chapter_segment.text).replace("\n", "").strip(" .").replace(
             '-', ' ')
+        segment_text = re.sub(r"\s\s+", " ", segment_text)
         segment_verses = segment_text.split('.')
         if len(segment_verses[-1]) <= 1:
             segment_verses.pop()
@@ -85,7 +86,7 @@ def bible_book_chapters_iterator(bible_book_soup):
             yield segment_verse
 
 
-def load_bible_vectors(fetch_strategy=None):
+def load_bible_data(fetch_strategy=None):
     if not fetch_strategy:
         def fetch_strategy():
             return DUMMY_SRC
@@ -96,10 +97,41 @@ def load_bible_vectors(fetch_strategy=None):
         with zipfile.ZipFile(src_file_name, 'r') as zf:
             zf.extractall(path=extract_path)
 
+    bible_words = {}
+    verses = []
+    maximal_verse = 0
     for src_file_name, soup in bible_files_iterator(extract_path):
         for verse in bible_book_chapters_iterator(soup):
-            pass # TODO: Create numpy array from all of the data
+            verses.append(verse)
+            verse_words = verse.split(' ')
+            maximal_verse = max(maximal_verse, len(verse_words))
+
+            for bible_word in verse_words:
+                if len(bible_word) <= 1:
+                    continue
+                bible_words.setdefault(bible_word, 0)
+                bible_words[bible_word] += 1
+
+    print(len(bible_words.keys()))
+    print('Maximal verse length: ', maximal_verse)
+
+    dict_keypair = [(word, appearances) for word, appearances in bible_words.items()]
+    dict_keypair.sort(key=lambda data: data[1])
+
+    return verses, maximal_verse, bible_words
+
+
+def vectorize_bible_data(verses, maximal_verse, bible_words):
+    """
+    Converts dictionary to machine usable data
+    :type verses: list
+    :type maximal_verse: int
+    :type bible_words: dict
+    :rtype: list[array, dict, dict]
+    """
+    pass
 
 
 if __name__ == '__main__':
-    load_bible_vectors(None)
+    verses, maximal_verse, bible_words = load_bible_data(None)
+    vectorized_verses, bible_words_to_index, index_to_bible_word = vectorize_bible_data(verses, maximal_verse, bible_words)
