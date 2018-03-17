@@ -5,6 +5,7 @@ import tempfile
 import shutil
 from os import path
 from bs4 import BeautifulSoup
+import json
 import numpy as np
 
 DOWNLOAD_LINK = 'http://www.mechon-mamre.org/htmlzips/k001.zip'
@@ -112,13 +113,10 @@ def load_bible_data(fetch_strategy=None):
                 bible_words.setdefault(bible_word, 0)
                 bible_words[bible_word] += 1
 
-    print(len(bible_words.keys()))
-    print('Maximal verse length: ', maximal_verse)
-
     dict_keypair = [(word, appearances) for word, appearances in bible_words.items()]
     dict_keypair.sort(key=lambda data: data[1])
 
-    return verses, maximal_verse, bible_words
+    return verses, maximal_verse, bible_words, dict_keypair
 
 
 def vectorize_bible_data(verses, maximal_verse, bible_words):
@@ -129,9 +127,15 @@ def vectorize_bible_data(verses, maximal_verse, bible_words):
     :type bible_words: dict
     :rtype: list[array, dict, dict]
     """
-    pass
+    return None, None, None
 
 
 if __name__ == '__main__':
-    verses, maximal_verse, bible_words = load_bible_data(None)
+    verses, maximal_verse, bible_words, stats = load_bible_data(None)
+
+    print(len(bible_words.keys()))
+    print('Maximal verse length: ', maximal_verse)
+    print('Top 15:')
+    print(stats[-20:])
+
     vectorized_verses, bible_words_to_index, index_to_bible_word = vectorize_bible_data(verses, maximal_verse, bible_words)
