@@ -3,7 +3,7 @@ import zipfile
 import urllib3
 import tempfile
 import shutil
-from os import path
+from os import path, remove
 from bs4 import BeautifulSoup
 import pickle
 from pathlib import Path
@@ -21,9 +21,12 @@ class BibleLoader(object):
     ILLEGAL_CHARS_REMOVER = re.compile("({.}|--|:|;|,)")
     CACHE = 'bible_cache'
 
-    def load(self):
+    def load(self, force_fetch=False):
         # Check if cache exists - if so - load from it
         # if not - start loading from internets and cache it
+        if force_fetch:
+            remove(self._resources_cache)
+
         cache_path = Path(self._resources_cache)
         if cache_path.is_file():
             print("Loading from cache: ", self._resources_cache)
