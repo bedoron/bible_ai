@@ -7,9 +7,9 @@ from os import path, remove
 from bs4 import BeautifulSoup
 import pickle
 from pathlib import Path
-import numpy as np
 
 DOWNLOAD_LINK = 'http://www.mechon-mamre.org/htmlzips/k001.zip'
+ALEPH_BET = ' .ןוחגרףפטכעיהץזתאמםנךצדסשלבק'
 
 
 class BibleLoader(object):
@@ -20,14 +20,15 @@ class BibleLoader(object):
     VALID_DATA_PAGE = re.compile('k\\d{2}.*?\\.htm')
     ILLEGAL_CHARS_REMOVER = re.compile("({.}|--|:|;|,)")
     CACHE = 'bible_cache'
+    TRANSLATION_TABLE = dict.fromkeys(map(ord, ALEPH_BET), None)
 
     def load(self, force_fetch=False):
         # Check if cache exists - if so - load from it
         # if not - start loading from internets and cache it
-        if force_fetch:
+        cache_path = Path(self._resources_cache)
+        if force_fetch and cache_path.is_file():
             remove(self._resources_cache)
 
-        cache_path = Path(self._resources_cache)
         if cache_path.is_file():
             print("Loading from cache: ", self._resources_cache)
             with cache_path.open('rb') as f:
@@ -119,23 +120,26 @@ class BibleLoader(object):
                 else:
                     some_tag.replace_with_children()
 
-            segment_text = BibleLoader.ILLEGAL_CHARS_REMOVER.sub(' ', book_chapter_segment.text).replace("\n",
-                                                                                                         "").strip(
-                " .").replace(
-                '-', ' ')
+            segment_text = BibleLoader.ILLEGAL_CHARS_REMOVER.sub(' ', book_chapter_segment.text).replace("\n", "") \
+                .strip(" .").replace('-', ' ')
+
             segment_text = re.sub(r"\s\s+", " ", segment_text)
             segment_verses = segment_text.split('.')
+
             if len(segment_verses[-1]) <= 1:
                 segment_verses.pop()
 
             for segment_verse in segment_verses:
+                bad_letters = set(list(segment_verse)).difference(ALEPH_BET)
+                bad_letters_table = dict.fromkeys(map(ord, bad_letters), None)
+                segment_verse = segment_verse.translate(bad_letters_table).strip()
+                if len(segment_verse) == 0:
+                    continue
+
                 yield segment_verse
 
-    def fetch_bible_data(self, fetch_strategy=_fetch_bible_from_url, destination=None):
-        if not fetch_strategy:
-            def fetch_strategy():
-                return DUMMY_SRC
-
+    @staticmethod
+    def fetch_bible_data(fetch_strategy=_fetch_bible_from_url, destination=None):
         if path.isdir(destination):
             shutil.rmtree(destination)
 
