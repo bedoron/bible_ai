@@ -60,11 +60,11 @@ def build_model(input_length, tokenizer, embedding_size = 50, lstm_memory_cells 
 
 def run_and_train_model(verses, maximal_verse):
     X, y, seq_length, tokenizer = pre_process_data(verses, maximal_verse)
-    model = build_model(seq_length, tokenizer)
+    model = build_model(seq_length, tokenizer, embedding_size=300, lstm_memory_cells=400)
     print(model.summary())
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(X, y, batch_size=128, epochs=100)
+    model.fit(X, y, batch_size=128, epochs=1)
 
     store_model(model, tokenizer)
 
