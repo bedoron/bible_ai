@@ -1,27 +1,24 @@
-absl-py (0.1.11)
-astor (0.6.2)
-beautifulsoup4 (4.6.0)
-bleach (1.5.0)
-bs4 (0.0.1)
-gast (0.2.0)
-grpcio (1.10.0)
-h5py (2.7.1)
-html5lib (0.9999999)
-Keras (2.1.5)
-Markdown (2.6.11)
-numpy (1.14.2)
-pip (9.0.1)
-protobuf (3.5.2.post1)
-PyYAML (3.12)
-scipy (1.0.0)
-setuptools (28.8.0)
-six (1.11.0)
-tensorboard (1.6.0)
-tensorflow (1.6.0)
-termcolor (1.1.0)
-Theano (1.0.1)
-tqdm (4.19.8)
-Unidecode (1.0.22)
-urllib3 (1.22)
-Werkzeug (0.14.1)
-wheel (0.30.0)
+absl-py==0.1.11
+astor==0.6.2
+beautifulsoup4==4.6.0
+bleach==1.5.0
+bs4==0.0.1
+gast==0.2.0
+grpcio==1.10.0
+h5py==2.7.1
+html5lib==0.9999999
+Keras==2.1.5
+Markdown==2.6.11
+numpy==1.14.2
+protobuf==3.5.2.post1
+PyYAML==3.12
+scipy==1.0.0
+six==1.11.0
+tensorboard==1.6.0
+tensorflow==1.6.0
+termcolor==1.1.0
+Theano==1.0.1
+tqdm==4.19.8
+Unidecode==1.0.22
+urllib3==1.22
+Werkzeug==0.14.1
