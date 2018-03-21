@@ -57,7 +57,7 @@ def run_genenrator():
 
     seed_text = bl.verses[np.random.randint(0, len(bl.verses))]
     print("Seed text: ", seed_text)
-    generated = generate_seq(model, tokenizer, bl.maximal_verse, seed_text, 50)
+    generated = generate_seq(model, tokenizer, 12, seed_text, 50)
     print("Generated:")
     print("*" * 15)
     print(generated)
